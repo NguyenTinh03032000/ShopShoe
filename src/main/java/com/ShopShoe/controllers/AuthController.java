@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.common.ERole;
 import com.ShopShoe.common.JwtUtils;
-import com.ShopShoe.dto.JwtResponse;
-import com.ShopShoe.dto.LoginRequest;
-import com.ShopShoe.dto.MessageResponse;
-import com.ShopShoe.dto.SignupRequest;
+import com.ShopShoe.dto.JwtResponseDto;
+import com.ShopShoe.dto.LoginRequestDto;
+import com.ShopShoe.dto.MessageResponseDto;
+import com.ShopShoe.dto.SignupRequestDto;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.entity.UserEntity;
 import com.ShopShoe.repository.RoleRepository;
@@ -49,7 +49,7 @@ public class AuthController {
 	JwtUtils jwtUtils;
 	
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest){
+	public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequestDto loginRequest){
 		
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -61,7 +61,7 @@ public class AuthController {
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
-		return ResponseEntity.ok(new JwtResponse(jwt,
+		return ResponseEntity.ok(new JwtResponseDto(jwt,
 				userDetails.getId(),
 				userDetails.getUsername(),
 				userDetails.getEmail(),
@@ -69,18 +69,18 @@ public class AuthController {
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequest signupRequest){
+	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequestDto signupRequest){
 		if(userRepository.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponse("Error: Username is already taklen!"));
+					.body(new MessageResponseDto("Error: Username is already taklen!"));
 			
 		}
 		
 		if(userRepository.existsByEmail(signupRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponse("Error: Email is already in use!"));
+					.body(new MessageResponseDto("Error: Email is already in use!"));
 		}
 		
 		UserEntity user = new UserEntity(
@@ -126,6 +126,6 @@ public class AuthController {
 		user.setRoles(roles);
 		userRepository.save(user);
 		
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return ResponseEntity.ok(new MessageResponseDto("User registered successfully!"));
 	}
 }

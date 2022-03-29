@@ -19,12 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.common.ERole;
-import com.ShopShoe.dto.MessageResponse;
-import com.ShopShoe.dto.SignupRequest;
+import com.ShopShoe.dto.MessageResponseDto;
+import com.ShopShoe.dto.SignupRequestDto;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.entity.UserEntity;
 import com.ShopShoe.repository.RoleRepository;
@@ -66,7 +65,7 @@ public class UserController {
 	
 	@PostMapping()
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> crateUser(@Validated @RequestBody SignupRequest signupRequest){
+	public ResponseEntity<?> crateUser(@Validated @RequestBody SignupRequestDto signupRequest){
 		return authController.registerUser(signupRequest);
 	}
 	
@@ -85,14 +84,14 @@ public class UserController {
 	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id,@Valid @RequestBody SignupRequest signupRequest) {
+	public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id,@Valid @RequestBody SignupRequestDto signupRequest) {
 		try {
 			UserEntity user = userService.findOne(id);
 			if(!user.getUsername().equals(signupRequest.getUsername())) {
 				if(userRepository.existsByUsername(signupRequest.getUsername())) {
 					return ResponseEntity
 							.badRequest()
-							.body(new MessageResponse("Error: Username is already taklen!"));
+							.body(new MessageResponseDto("Error: Username is already taklen!"));
 					
 				}
 			}
@@ -100,7 +99,7 @@ public class UserController {
 				if(userRepository.existsByEmail(signupRequest.getEmail()) ) {
 					return ResponseEntity
 							.badRequest()
-							.body(new MessageResponse("Error: Email is already in use!"));
+							.body(new MessageResponseDto("Error: Email is already in use!"));
 				}
 			}
 			user.setName(signupRequest.getName());
@@ -144,9 +143,9 @@ public class UserController {
 			user.setRoles(roles);
 			
 			userService.save(user);
-			return ResponseEntity.ok(new MessageResponse("User update successfully!"));
+			return ResponseEntity.ok(new MessageResponseDto("User update successfully!"));
 		}catch (Exception e) {
-			return ResponseEntity.ok(new MessageResponse("User updae fail!"));
+			return ResponseEntity.ok(new MessageResponseDto("User updae fail!"));
 		}
 	}
 }

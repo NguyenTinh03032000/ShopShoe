@@ -47,7 +47,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+//	private static final String[] AUTH_WHITELIST = {
+//	        "/swagger-resources/**",
+//	        "/swagger-ui.html",
+//	        "/v2/api-docs",
+//	        "/webjars/**"
+//	};
+//	@Bean
+//	public BasicAuthenticationEntryPoint swaggerAuthenticationEntryPoint() {
+//	    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+//	    entryPoint.setRealmName("Swagger Realm");
+//	    return entryPoint;
+//	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		http.cors().and().csrf().disable()
@@ -59,4 +70,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception{
+//		http
+//		.authorizeHttpRequests().antMatchers(AUTH_WHITELIST).authenticated()
+//		.and()
+//		.httpBasic().authenticationEntryPoint(swaggerAuthenticationEntryPoint())
+//		.and()
+//		.csrf().disable();
+//	}
 }
