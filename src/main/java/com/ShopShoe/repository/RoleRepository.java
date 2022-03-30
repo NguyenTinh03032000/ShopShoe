@@ -9,6 +9,8 @@ import com.ShopShoe.common.ERole;
 import com.ShopShoe.entity.RoleEntity;
 
 @Repository
-public interface RoleRepository extends JpaRepository<RoleEntity, Long>{
+public interface RoleRepository extends JpaRepository<RoleEntity, Integer>{
 	Optional<RoleEntity> findByName(ERole name);
+	
+	Boolean existsByName(ERole name);
 }
