@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 import com.ShopShoe.service.Ipml.UserDetailsServiceImpl;
 
@@ -47,18 +48,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-//	private static final String[] AUTH_WHITELIST = {
-//	        "/swagger-resources/**",
-//	        "/swagger-ui.html",
-//	        "/v2/api-docs",
-//	        "/webjars/**"
-//	};
-//	@Bean
-//	public BasicAuthenticationEntryPoint swaggerAuthenticationEntryPoint() {
-//	    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-//	    entryPoint.setRealmName("Swagger Realm");
-//	    return entryPoint;
-//	}
+	private static final String[] AUTH_WHITELIST = {
+	        "/swagger-resources/**",
+	        "/swagger-ui.html",
+	        "/v2/api-docs",
+	        "/webjars/**"
+	};
+	@Bean
+	public BasicAuthenticationEntryPoint swaggerAuthenticationEntryPoint() {
+	    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+	    entryPoint.setRealmName("Swagger Realm");
+	    return entryPoint;
+	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
 		http.cors().and().csrf().disable()
@@ -66,7 +67,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 		.authorizeRequests().antMatchers("/signin").permitAll()
 		.antMatchers("/signup").permitAll()
+		//.antMatchers(AUTH_WHITELIST).authenticated()
 		.anyRequest().authenticated();
+		//.and()
+		//.httpBasic().authenticationEntryPoint(swaggerAuthenticationEntryPoint());
 		
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}

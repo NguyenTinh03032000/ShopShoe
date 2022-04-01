@@ -53,8 +53,13 @@ public class UserController {
 	@GetMapping()
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<UserEntity> getAllUser() {
-		logger.info("===Information employee===");
-		return (List<UserEntity>) userService.findAll();
+		try {
+			logger.info("===Information employee===");
+			return (List<UserEntity>) userRepository.findAll();
+		} catch (Exception e) {
+			logger.error("Error", e);
+		}
+		return null;	
 	}
 	
 	@GetMapping("/{id}")
@@ -144,7 +149,7 @@ public class UserController {
 			userService.save(user);
 			return ResponseEntity.ok(new MessageResponseDto("User update successfully!"));
 		}catch (Exception e) {
-			return ResponseEntity.ok(new MessageResponseDto("User updae fail!"));
+			return ResponseEntity.ok(new MessageResponseDto("User update fail!"));
 		}
 	}
 }
