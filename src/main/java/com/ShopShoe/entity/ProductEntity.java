@@ -1,16 +1,12 @@
 package com.ShopShoe.entity;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "product")
 public class ProductEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,9 +29,5 @@ public class ProductEntity {
 	@ManyToOne
 	@JoinColumn(name = "id_category")
 	private CategoryEntity category;
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "product")
-	private List<ProductEntity> listProduct;
 
 }

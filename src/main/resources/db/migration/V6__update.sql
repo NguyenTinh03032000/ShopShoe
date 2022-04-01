@@ -5,12 +5,10 @@ drop table if exists user_token;
 drop table if exists cart_index;
 drop table if exists cart;
 drop table if exists log;
-drop table if exists Discount;
 drop table if exists product;
+drop table if exists Discount;
 drop table if exists category;
-drop table if exists user_roles;
-drop table if exists users;
-drop table if exists roles;
+
 create table if not exists roles (
 	id int primary key not null auto_increment,
     name varchar(20) not null,
@@ -123,6 +121,3 @@ create table if not exists order_details (
 	createDate datetime default null,
 	updateDate datetime default null
 );
-INSERT INTO roles(name) VALUES('ROLE_CUSTOMER');
-INSERT INTO roles(name) VALUES('ROLE_ADMIN');
-INSERT INTO roles(name) VALUES('ROLE_SALESMAN');
