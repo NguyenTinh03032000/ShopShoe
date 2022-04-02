@@ -67,20 +67,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 		.authorizeRequests().antMatchers("/signin").permitAll()
 		.antMatchers("/signup").permitAll()
-		//.antMatchers(AUTH_WHITELIST).authenticated()
-		.anyRequest().authenticated();
-		//.and()
-		//.httpBasic().authenticationEntryPoint(swaggerAuthenticationEntryPoint());
+		.antMatchers(AUTH_WHITELIST).authenticated()
+		.anyRequest().authenticated()
+		.and()
+		.httpBasic().authenticationEntryPoint(swaggerAuthenticationEntryPoint());
 		
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception{
-//		http
-//		.authorizeHttpRequests().antMatchers(AUTH_WHITELIST).authenticated()
-//		.and()
-//		.httpBasic().authenticationEntryPoint(swaggerAuthenticationEntryPoint())
-//		.and()
-//		.csrf().disable();
-//	}
 }
