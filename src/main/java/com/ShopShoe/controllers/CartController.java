@@ -1,0 +1,72 @@
+package com.ShopShoe.controllers;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ShopShoe.entity.CartEntity;
+import com.ShopShoe.entity.CartIndexEntity;
+import com.ShopShoe.entity.ProductEntity;
+import com.ShopShoe.entity.UserEntity;
+import com.ShopShoe.repository.CartIndexRepository;
+import com.ShopShoe.repository.CartRepository;
+import com.ShopShoe.repository.ProductRepository;
+import com.ShopShoe.repository.UserRepository;
+import com.ShopShoe.service.Ipml.UserDetailsImpl;
+
+@RestController
+@RequestMapping("cart")
+public class CartController {
+	
+	@Autowired
+	private CartRepository cartRepository;
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private ProductRepository productRepository;
+	@Autowired
+	private CartIndexRepository cartIndexRepository;
+	
+	@PostMapping("/addProduct")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+	public String addToCart(@RequestParam("idProduct") String id,HttpServletRequest request) {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserDetailsImpl u = (UserDetailsImpl) authentication.getPrincipal();
+			UserEntity currentUser = userRepository.getById(u.getId());
+			
+			ProductEntity product = productRepository.getById(Long.parseLong(id));
+			CartEntity cart = cartRepository.findByUser(currentUser);
+			
+			if(cart == null)
+			{
+				cart = new CartEntity();
+				cart.setUser(currentUser);
+				cart = cartRepository.save(cart);			
+			}
+			
+			CartIndexEntity cartIndex = cartIndexRepository.findByProductAndCart(product, cart);
+			
+			if(cartIndex == null){    
+				cartIndex = new CartIndexEntity();
+				cartIndex.setCart(cart);
+				cartIndex.setProduct(product);
+				cartIndex.setAmount(1);
+			}
+			else{
+				cartIndex.setAmount(cartIndex.getAmount()+1);
+			}
+			cartIndex = cartIndexRepository.save(cartIndex);
+			return "success";
+		} catch (Exception e) {
+			return "Error";
+		}
+	}
+}
