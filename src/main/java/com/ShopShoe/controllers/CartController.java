@@ -52,6 +52,7 @@ public class CartController {
 		return null;
 	}
 	
+	//Add product in cart
 	@PostMapping("/addProduct")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
 	public String addToCart(@RequestParam("idProduct") String id,HttpServletRequest request) {
@@ -86,5 +87,21 @@ public class CartController {
 		} catch (Exception e) {
 			return "Error";
 		}
+	}
+	
+	//update quanity product in cart
+	@PostMapping("changProductQuanity")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+	public String changQuanity(@RequestParam String id, @RequestParam String value) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsImpl u = (UserDetailsImpl) authentication.getPrincipal();
+		UserEntity currentUser = userRepository.getById(u.getId());
+		
+		CartEntity cartEntity = cartRepository.findByUser(currentUser);
+		ProductEntity product = productRepository.getById(Long.parseLong(id));
+		CartIndexEntity cartIndexEntity = cartIndexRepository.findByProductAndCart(product, cartEntity);
+		cartIndexEntity.setAmount(Integer.parseInt(value));
+		cartIndexEntity = cartIndexRepository.save(cartIndexEntity);
+		return "Success";
 	}
 }
