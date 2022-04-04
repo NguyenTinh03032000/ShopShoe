@@ -1,11 +1,14 @@
 package com.ShopShoe.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +36,21 @@ public class CartController {
 	private ProductRepository productRepository;
 	@Autowired
 	private CartIndexRepository cartIndexRepository;
+	
+	@GetMapping()
+	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+	public List<CartIndexEntity> getAllProductInCart() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetailsImpl u = (UserDetailsImpl) authentication.getPrincipal();
+		UserEntity currentUser = userRepository.getById(u.getId());
+		
+		CartEntity cart = cartRepository.findByUser(currentUser);
+		if(cart != null) {
+			List<CartIndexEntity> listIndex = cartIndexRepository.findByCart(cart);
+			return listIndex;
+		}
+		return null;
+	}
 	
 	@PostMapping("/addProduct")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
