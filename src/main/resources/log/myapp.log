@@ -98,4 +98,14 @@
 2022-04-02 14:11:29 INFO  UserController:57 - ===Information employee===
 2022-04-02 14:12:21 INFO  UserController:57 - ===Information employee===
 2022-04-02 14:12:30 INFO  RoleController:31 - ===Information Role===
-2022-04-04 11:10:21 INFO  UserController:57 - ===Information employee===
+
+2022-04-04 08:22:29 INFO  UserController:57 - ===Information employee===
+2022-04-04 08:22:38 INFO  RoleController:31 - ===Information Role===
+2022-04-04 15:26:22 INFO  CreateProductController:38 - ===Information Product===
+2022-04-04 15:28:38 INFO  CreateProductController:38 - ===Information Product===
+2022-04-04 15:31:13 INFO  CreateProductController:38 - ===Information Product===
+2022-04-04 15:32:12 INFO  CreateProductController:38 - ===Information Product===
+2022-04-04 15:32:49 INFO  CreateProductController:38 - ===Information Product===
+2022-04-04 15:33:18 INFO  CreateProductController:38 - ===Information Product===
+2022-04-04 15:33:46 INFO  CreateProductController:38 - ===Information Product===
+
