@@ -67,7 +67,6 @@ public class AuthController {
 				userDetails.getEmail(),
 				roles));
 	}
-	
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequestDto signupRequest){
 		if(userRepository.existsByUsername(signupRequest.getUsername())) {
@@ -122,10 +121,60 @@ public class AuthController {
 				}
 			});
 		}
-		
 		user.setRoles(roles);
 		userRepository.save(user);
 		
 		return ResponseEntity.ok(new MessageResponseDto("User registered successfully!"));
 	}
+
+	@PostMapping("/signupCustomer")
+	public ResponseEntity<?> registerUserByCustomer(@Validated @RequestBody SignupRequestDto signupRequest){
+		if(userRepository.existsByUsername(signupRequest.getUsername())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponseDto("Error: Username is already taklen!"));
+
+		}
+
+		if(userRepository.existsByEmail(signupRequest.getEmail())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponseDto("Error: Email is already in use!"));
+		}
+
+		UserEntity user = new UserEntity(
+				signupRequest.getName(),
+				signupRequest.getAddress(),
+				signupRequest.getPhone_number(),
+				signupRequest.getUsername(),
+				signupRequest.getEmail(),
+				encoder.encode(signupRequest.getPassword()),
+				signupRequest.getScores()
+		);
+
+		Set<String> strRole = signupRequest.getRole();
+		Set<RoleEntity> roles = new HashSet<>();
+
+		if(strRole == null) {
+			RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+			roles.add(customerRole);
+		}else {
+			strRole.forEach(role ->{
+				switch (role) {
+
+					default:
+						RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+						roles.add(customerRole);
+				}
+			});
+		}
+
+		user.setRoles(roles);
+		userRepository.save(user);
+
+		return ResponseEntity.ok(new MessageResponseDto("User registered successfully!"));
+	}
 }
+
