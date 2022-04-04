@@ -27,24 +27,22 @@ import com.ShopShoe.repository.ProductRepository;
 public class ProductController {
 
 	private static Logger logger = Logger.getLogger(ProductController.class);
-	
+
 	@Autowired
 	private ProductRepository productRepository;
-	
-	
+
 	//get all product
 	@GetMapping()
-	public List<ProductEntity> getAllRole() {
-		logger.info("===Information Product===");
+	public List<ProductEntity> getProduct() {
 		return (List<ProductEntity>) productRepository.findAll();
 	}
-	
+
 	//get product by id
 	@GetMapping("/{id}")
 	public ProductEntity getProductById(@PathVariable(value = "id") Long id) {
 		return productRepository.getById(id);
 	}
-	
+
 	@PostMapping()
 	public String createProduct(@RequestBody ProductEntity product) {
 		try {
@@ -58,25 +56,25 @@ public class ProductController {
 			return "Error";
 		}
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public String deleteProduct(@PathVariable Long id){
 		try {
 			ProductEntity product = productRepository.getById(id);
-			
+
 			productRepository.delete(product);
-			return "Delete product successful";			
+			return "Delete product successful";
 		} catch (Exception e) {
 			return "Error";
-		}	
+		}
 	}
-	
+
 	@PutMapping("/{id}")
 	public String updateProduct(@PathVariable(value = "id") Long id,@Valid @RequestBody ProductEntity productDetails) {
 		try {
 			ProductEntity product = productRepository.getById(id);
 			product.setName(productDetails.getName());
-			
+
 			productRepository.save(product);
 			return "Update product successfuly";
 		}catch (Exception e) {

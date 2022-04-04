@@ -28,7 +28,6 @@ public class RoleController {
 	//get all role
 	@GetMapping()
 	public List<RoleEntity> getAllRole() {
-		logger.info("===Information Role===");
 		return (List<RoleEntity>) roleRepository.findAll();
 	}
 	

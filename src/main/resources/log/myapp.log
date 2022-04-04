@@ -109,4 +109,8 @@
 2022-04-04 15:33:18 INFO  CreateProductController:38 - ===Information Product===
 2022-04-04 15:33:46 INFO  CreateProductController:38 - ===Information Product===
 
-2022-04-04 16:12:04 INFO  RoleController:31 - ===Information Role===
+
+2022-04-04 16:13:12 INFO  ProductController:37 - ===Information Product===
+2022-04-04 16:19:11 INFO  ProductController:37 - ===Information Product===
+2022-04-04 16:20:21 INFO  ProductController:37 - ===Information Product===
+2022-04-04 16:33:16 INFO  ProductController:37 - ===Information Product===
