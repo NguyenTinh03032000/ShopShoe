@@ -54,7 +54,6 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<UserEntity> getAllUser() {
 		try {
-			logger.info("===Information employee===");
 			return (List<UserEntity>) userRepository.findAll();
 		} catch (Exception e) {
 			logger.error("Error", e);

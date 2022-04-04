@@ -34,7 +34,6 @@ public class ProductController {
 	//get all product
 	@GetMapping()
 	public List<ProductEntity> getProduct() {
-		logger.info("===Information Product===");
 		return (List<ProductEntity>) productRepository.findAll();
 	}
 
