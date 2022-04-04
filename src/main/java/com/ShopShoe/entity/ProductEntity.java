@@ -23,7 +23,7 @@ public class ProductEntity {
 
 	private String name;
 	private double price;
-	private String descriptionString;
+	private String description;
 	private String brand;
 
 	@ManyToOne
