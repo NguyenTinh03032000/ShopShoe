@@ -2,6 +2,7 @@ package com.ShopShoe.controllers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -62,8 +63,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public UserEntity getUserById(@PathVariable(value = "id") Long id) {
-		return userService.findOne(id);
+	public Optional<UserEntity> getUserById(@PathVariable(value = "id") Long id) {
+		return userRepository.findById(id);
 	}
 	
 	@PostMapping()
@@ -89,7 +90,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id,@Valid @RequestBody SignupRequestDto signupRequest) {
 		try {
-			UserEntity user = userService.findOne(id);
+			UserEntity user = userService.findId(id);
 			if(!user.getUsername().equals(signupRequest.getUsername())) {
 				if(userRepository.existsByUsername(signupRequest.getUsername())) {
 					return ResponseEntity

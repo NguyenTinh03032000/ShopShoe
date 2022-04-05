@@ -10,8 +10,10 @@ import com.ShopShoe.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
 	@Autowired
     private UserRepository userRepository;
+	
     @Override
     public List<UserEntity> findAll() {
         return userRepository.findAll();
@@ -31,5 +33,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UserEntity u) {
     	userRepository.delete(u);
+    }
+    @Override
+    public UserEntity findId(long id) {
+    	return userRepository.findId(id);
     }
 }

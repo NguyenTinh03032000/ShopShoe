@@ -1,8 +1,8 @@
 package com.ShopShoe.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,17 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.repository.RoleRepository;
 
-
 @RestController
 @RequestMapping("role")
 @PreAuthorize("hasRole('ADMIN')")
 public class RoleController {
-
-	private static Logger logger = Logger.getLogger(RoleController.class);
 	
 	@Autowired
 	private RoleRepository roleRepository;
-	
 	
 	//get all role
 	@GetMapping()
@@ -33,46 +29,7 @@ public class RoleController {
 	
 	//get role by id
 	@GetMapping("/{id}")
-	public RoleEntity getRoleById(@PathVariable(value = "id") Integer id) {
-		return roleRepository.getById(id);
+	public Optional<RoleEntity> getRoleById(@PathVariable(value = "id") Integer id) {
+		return roleRepository.findById(id);
 	}
-	
-//	@PostMapping()
-//	public String createRole(@RequestBody RoleEntity role) {
-//		try {
-//			if(roleRepository.existsByName(role.getName())){
-//				return "Role already exist";
-//			}else {
-//				roleRepository.save(role);
-//				return "Add role successful";
-//			}
-//		} catch (Exception e) {
-//			return "Error";
-//		}
-//	}
-//	
-//	@DeleteMapping("/{id}")
-//	public String deleteRole(@PathVariable Integer id){
-//		try {
-//			RoleEntity role = roleRepository.getById(id);
-//			
-//			roleRepository.delete(role);
-//			return "Delete role successful";			
-//		} catch (Exception e) {
-//			return "Error";
-//		}	
-//	}
-//	
-//	@PutMapping("/{id}")
-//	public String updateRole(@PathVariable(value = "id") Integer id,@Valid @RequestBody RoleEntity roleDetails) {
-//		try {
-//			RoleEntity role = roleRepository.getById(id);
-//			role.setName(roleDetails.getName());
-//			
-//			roleRepository.save(role);
-//			return "Update role successfuly";
-//		}catch (Exception e) {
-//			return "Error";
-//		}
-//	}
 }

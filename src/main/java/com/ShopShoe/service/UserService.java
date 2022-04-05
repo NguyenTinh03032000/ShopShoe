@@ -11,4 +11,5 @@ public interface UserService {
     UserEntity findOne(long id);
     void save(UserEntity u);
     void delete(UserEntity u);
+    UserEntity findId(long id);
 }

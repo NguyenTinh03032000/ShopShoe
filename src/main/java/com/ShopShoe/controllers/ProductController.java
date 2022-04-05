@@ -1,10 +1,10 @@
 package com.ShopShoe.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,15 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ShopShoe.entity.ProductEntity;
 import com.ShopShoe.repository.ProductRepository;
 
-
-
 @RestController
 @RequestMapping("product")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN') or hasRole('SALESMAN')")
 public class ProductController {
-
-	private static Logger logger = Logger.getLogger(ProductController.class);
-
+	
 	@Autowired
 	private ProductRepository productRepository;
 
@@ -39,8 +35,8 @@ public class ProductController {
 
 	//get product by id
 	@GetMapping("/{id}")
-	public ProductEntity getProductById(@PathVariable(value = "id") Long id) {
-		return productRepository.getById(id);
+	public Optional<ProductEntity> getProductById(@PathVariable(value = "id") Long id) {
+		return productRepository.findById(id);
 	}
 
 	@PostMapping()
@@ -69,16 +65,24 @@ public class ProductController {
 		}
 	}
 
-	@PutMapping("/{id}")
-	public String updateProduct(@PathVariable(value = "id") Long id,@Valid @RequestBody ProductEntity productDetails) {
+	@PutMapping(value ="/{id}")
+	public ProductEntity updateProduct(@PathVariable(value = "id") Long id,@Valid @RequestBody ProductEntity productDetails) {
 		try {
-			ProductEntity product = productRepository.getById(id);
-			product.setName(productDetails.getName());
-
-			productRepository.save(product);
-			return "Update product successfuly";
-		}catch (Exception e) {
-			return "Error";
+			return productRepository.findById(id)
+					.map(product ->{
+						product.setName(productDetails.getName());
+						product.setPrice(productDetails.getPrice());
+						product.setDescription(productDetails.getDescription());
+						product.setBrand(productDetails.getBrand());
+						product.setCategory(productDetails.getCategory());
+						return productRepository.save(product);
+					})
+					.orElseGet(()->{
+						productDetails.setId(id);
+						return productRepository.save(productDetails);
+					});
+		} catch (Exception e) {
 		}
+		return null;
 	}
 }

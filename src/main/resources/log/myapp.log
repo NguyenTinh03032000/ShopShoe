@@ -114,3 +114,4 @@
 2022-04-04 16:19:11 INFO  ProductController:37 - ===Information Product===
 2022-04-04 16:20:21 INFO  ProductController:37 - ===Information Product===
 2022-04-04 16:33:16 INFO  ProductController:37 - ===Information Product===
+2022-04-05 11:04:53 ERROR ProductController:88 - org.springframework.orm.jpa.JpaObjectRetrievalFailureException: Unable to find com.ShopShoe.entity.CategoryEntity with id 2; nested exception is javax.persistence.EntityNotFoundException: Unable to find com.ShopShoe.entity.CategoryEntity with id 2

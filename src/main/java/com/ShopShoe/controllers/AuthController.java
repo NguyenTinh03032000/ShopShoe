@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,6 +49,7 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 	
+	//Signin for all
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequestDto loginRequest){
 		
@@ -67,6 +69,9 @@ public class AuthController {
 				userDetails.getEmail(),
 				roles));
 	}
+	
+	//signup for admin
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequestDto signupRequest){
 		if(userRepository.existsByUsername(signupRequest.getUsername())) {
@@ -126,7 +131,8 @@ public class AuthController {
 		
 		return ResponseEntity.ok(new MessageResponseDto("User registered successfully!"));
 	}
-
+	
+	//signup for customer
 	@PostMapping("/signupCustomer")
 	public ResponseEntity<?> registerUserByCustomer(@Validated @RequestBody SignupRequestDto signupRequest){
 		if(userRepository.existsByUsername(signupRequest.getUsername())) {
