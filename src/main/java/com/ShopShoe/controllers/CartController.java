@@ -90,7 +90,7 @@ public class CartController {
 	}
 	
 	//update quanity product in cart
-	@PostMapping("changProductQuanity")
+	@PostMapping("/changProductQuanity")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
 	public String changQuanity(@RequestParam String id, @RequestParam String value) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -15,8 +15,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.common.ERole;
@@ -26,13 +28,16 @@ import com.ShopShoe.dto.LoginRequestDto;
 import com.ShopShoe.dto.MessageResponseDto;
 import com.ShopShoe.dto.SignupRequestDto;
 import com.ShopShoe.entity.RoleEntity;
+import com.ShopShoe.entity.TokenEntity;
 import com.ShopShoe.entity.UserEntity;
 import com.ShopShoe.repository.RoleRepository;
+import com.ShopShoe.repository.TokenRepository;
 import com.ShopShoe.repository.UserRepository;
 import com.ShopShoe.service.Ipml.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("account")
 public class AuthController {
 	@Autowired
 	AuthenticationManager authenticationManager;
@@ -42,6 +47,9 @@ public class AuthController {
 	
 	@Autowired
 	RoleRepository roleRepository;
+	
+	@Autowired
+	TokenRepository tokenRepository;
 	
 	@Autowired
 	PasswordEncoder encoder;
@@ -70,9 +78,28 @@ public class AuthController {
 				roles));
 	}
 	
+	@GetMapping("/logout")
+	public String logoutUser(){
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserDetailsImpl u = (UserDetailsImpl) authentication.getPrincipal();
+			UserEntity currentUser = userRepository.findId(u.getId());
+
+			TokenEntity tokenEntity = tokenRepository.findByUserId(currentUser.getId());
+			tokenEntity.setToken("");
+			tokenEntity.setTime_expired(null);
+			tokenEntity.setCreate_date(null);
+			tokenEntity.setUpdate_date(null);
+			tokenRepository.save(tokenEntity);
+			return "Logout successfuly";
+		} catch (Exception e) {
+			return "Logout fail";
+		}
+	}
+	
 	//signup for admin
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/signup")
+	@PostMapping("/signupAdmin")
 	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequestDto signupRequest){
 		if(userRepository.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity

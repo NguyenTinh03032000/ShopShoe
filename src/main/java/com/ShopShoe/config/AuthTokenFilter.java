@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ShopShoe.common.JwtUtils;
+import com.ShopShoe.repository.TokenRepository;
 import com.ShopShoe.service.Ipml.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter{
@@ -28,14 +29,17 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 	
+	@Autowired
+	private TokenRepository tokenRepository;
+	
 	private static final Logger Logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response
 			, FilterChain filterChain) throws ServletException, IOException{
-		try {
+		try {		
 			String jwt = parseJwt(request);
-			if(jwt != null && jwtUtils.validateJwtToken(jwt)) {
+			if(jwt != null && jwtUtils.validateJwtToken(jwt) && tokenRepository.existsByToken(jwt)) {
 				String username = jwtUtils.getUserNameFromJwtToken(jwt);
 				
 				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -43,7 +47,7 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 				auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				
 				SecurityContextHolder.getContext().setAuthentication(auth);
-			}
+			}	
 		}catch (Exception e) {
 			Logger.error("Cannot set user authentication: {}", e);
 		}
