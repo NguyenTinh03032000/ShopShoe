@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ShopShoe.common.DocumentStorageException;
+import com.ShopShoe.common.DocumentException;
 import com.ShopShoe.entity.DocumentEntity;
 import com.ShopShoe.repository.DocumentRepository;
 
@@ -33,7 +33,7 @@ private final Path fileStorageLocation;
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
-            throw new DocumentStorageException("Could not create the directory where the uploaded files will be stored.", ex);
+            throw new DocumentException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
     public String storeFile(MultipartFile file, Integer userId, String docType) {
@@ -43,7 +43,7 @@ private final Path fileStorageLocation;
         try {
             // Check if the file's name contains invalid characters
             if(originalFileName.contains("..")) {
-                throw new DocumentStorageException("Sorry! Filename contains invalid path sequence " + originalFileName);
+                throw new DocumentException("Sorry! Filename contains invalid path sequence " + originalFileName);
             }
             String fileExtension = "";
             try {
@@ -71,7 +71,7 @@ private final Path fileStorageLocation;
             }
             return fileName;
         } catch (IOException ex) {
-            throw new DocumentStorageException("Could not store file " + fileName + ". Please try again!", ex);
+            throw new DocumentException("Could not store file " + fileName + ". Please try again!", ex);
         }
     }
     public Resource loadFileAsResource(String fileName) throws Exception {

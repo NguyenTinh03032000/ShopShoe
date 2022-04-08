@@ -104,8 +104,7 @@ public class AuthController {
 		if(userRepository.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
-					.body(new MessageResponseDto("Error: Username is already taklen!"));
-			
+					.body(new MessageResponseDto("Error: Username is already taklen!"));			
 		}
 		
 		if(userRepository.existsByEmail(signupRequest.getEmail())) {
