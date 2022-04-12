@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.entity.ProductEntity;
-import com.ShopShoe.repository.ProductRepository;
+import com.ShopShoe.service.ProductService;
 
 @RestController
 @RequestMapping("product")
@@ -25,27 +25,25 @@ import com.ShopShoe.repository.ProductRepository;
 public class ProductController {
 	
 	@Autowired
-	private ProductRepository productRepository;
+	private ProductService productService;
 
-	//get all product
 	@GetMapping()
 	public List<ProductEntity> getProduct() {
-		return (List<ProductEntity>) productRepository.findAll();
+		return (List<ProductEntity>) productService.findAll();
 	}
 
-	//get product by id
 	@GetMapping("/{id}")
 	public Optional<ProductEntity> getProductById(@PathVariable(value = "id") Long id) {
-		return productRepository.findById(id);
+		return productService.findById(id);
 	}
 
 	@PostMapping()
 	public String createProduct(@RequestBody ProductEntity product) {
 		try {
-			if(productRepository.existsByName(product.getName())){
+			if(productService.existsByName(product.getName())){
 				return "Product already exist";
 			}else {
-				productRepository.save(product);
+				productService.save(product);
 				return "Add product successful";
 			}
 		} catch (Exception e) {
@@ -56,9 +54,9 @@ public class ProductController {
 	@DeleteMapping("/{id}")
 	public String deleteProduct(@PathVariable Long id){
 		try {
-			ProductEntity product = productRepository.getById(id);
+			ProductEntity product = productService.getById(id);
 
-			productRepository.delete(product);
+			productService.delete(product);
 			return "Delete product successful";
 		} catch (Exception e) {
 			return "Error";
@@ -68,18 +66,18 @@ public class ProductController {
 	@PutMapping(value ="/{id}")
 	public ProductEntity updateProduct(@PathVariable(value = "id") Long id,@Valid @RequestBody ProductEntity productDetails) {
 		try {
-			return productRepository.findById(id)
+			return productService.findById(id)
 					.map(product ->{
 						product.setName(productDetails.getName());
 						product.setPrice(productDetails.getPrice());
 						product.setDescription(productDetails.getDescription());
 						product.setBrand(productDetails.getBrand());
 						product.setCategory(productDetails.getCategory());
-						return productRepository.save(product);
+						return productService.save(product);
 					})
 					.orElseGet(()->{
 						productDetails.setId(id);
-						return productRepository.save(productDetails);
+						return productService.save(productDetails);
 					});
 		} catch (Exception e) {
 		}

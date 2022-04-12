@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.entity.RoleEntity;
-import com.ShopShoe.repository.RoleRepository;
+import com.ShopShoe.service.RoleService;
 
 @RestController
 @RequestMapping("role")
@@ -19,17 +19,15 @@ import com.ShopShoe.repository.RoleRepository;
 public class RoleController {
 	
 	@Autowired
-	private RoleRepository roleRepository;
+	private RoleService roleService;
 	
-	//get all role
 	@GetMapping()
 	public List<RoleEntity> getAllRole() {
-		return (List<RoleEntity>) roleRepository.findAll();
+		return (List<RoleEntity>) roleService.findAll();
 	}
 	
-	//get role by id
 	@GetMapping("/{id}")
 	public Optional<RoleEntity> getRoleById(@PathVariable(value = "id") Integer id) {
-		return roleRepository.findById(id);
+		return roleService.findById(id);
 	}
 }

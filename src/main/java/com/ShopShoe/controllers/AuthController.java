@@ -30,10 +30,10 @@ import com.ShopShoe.dto.SignupRequestDto;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.entity.TokenEntity;
 import com.ShopShoe.entity.UserEntity;
-import com.ShopShoe.repository.RoleRepository;
-import com.ShopShoe.repository.TokenRepository;
-import com.ShopShoe.repository.UserRepository;
-import com.ShopShoe.service.Ipml.UserDetailsImpl;
+import com.ShopShoe.service.RoleService;
+import com.ShopShoe.service.TokenService;
+import com.ShopShoe.service.UserService;
+import com.ShopShoe.service.Implements.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -43,13 +43,13 @@ public class AuthController {
 	AuthenticationManager authenticationManager;
 	
 	@Autowired
-	UserRepository userRepository;
+	UserService userService;
 	
 	@Autowired
-	RoleRepository roleRepository;
+	RoleService roleService;
 	
 	@Autowired
-	TokenRepository tokenRepository;
+	TokenService tokenService;
 	
 	@Autowired
 	PasswordEncoder encoder;
@@ -57,7 +57,6 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 	
-	//Signin for all
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequestDto loginRequest){
 		
@@ -83,31 +82,30 @@ public class AuthController {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			UserDetailsImpl u = (UserDetailsImpl) authentication.getPrincipal();
-			UserEntity currentUser = userRepository.findId(u.getId());
+			UserEntity currentUser = userService.findId(u.getId());
 
-			TokenEntity tokenEntity = tokenRepository.findByUserId(currentUser.getId());
+			TokenEntity tokenEntity = tokenService.findByUserId(currentUser.getId());
 			tokenEntity.setToken("");
 			tokenEntity.setTime_expired(null);
 			tokenEntity.setCreate_date(null);
 			tokenEntity.setUpdate_date(null);
-			tokenRepository.save(tokenEntity);
+			tokenService.save(tokenEntity);
 			return "Logout successfuly";
 		} catch (Exception e) {
 			return "Logout fail";
 		}
 	}
 	
-	//signup for admin
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/signupAdmin")
 	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequestDto signupRequest){
-		if(userRepository.existsByUsername(signupRequest.getUsername())) {
+		if(userService.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponseDto("Error: Username is already taklen!"));			
 		}
 		
-		if(userRepository.existsByEmail(signupRequest.getEmail())) {
+		if(userService.existsByEmail(signupRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponseDto("Error: Email is already in use!"));
@@ -127,48 +125,47 @@ public class AuthController {
 		Set<RoleEntity> roles = new HashSet<>();
 		
 		if(strRole == null) {
-			RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+			RoleEntity customerRole = roleService.findByName(ERole.ROLE_CUSTOMER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(customerRole);
 		}else {
 			strRole.forEach(role ->{
 				switch (role) {
 				case "admin":
-						RoleEntity adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+						RoleEntity adminRole = roleService.findByName(ERole.ROLE_ADMIN)
 						.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(adminRole);
 					break;
 				
 				case "salesman":
-					RoleEntity saleRole = roleRepository.findByName(ERole.ROLE_SALESMAN)
+					RoleEntity saleRole = roleService.findByName(ERole.ROLE_SALESMAN)
 						.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(saleRole);
 					break;
 					
 				default:
-					RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+					RoleEntity customerRole = roleService.findByName(ERole.ROLE_CUSTOMER)
 						.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(customerRole);
 				}
 			});
 		}
 		user.setRoles(roles);
-		userRepository.save(user);
+		userService.save(user);
 		
 		return ResponseEntity.ok(new MessageResponseDto("User registered successfully!"));
 	}
 	
-	//signup for customer
 	@PostMapping("/signupCustomer")
 	public ResponseEntity<?> registerUserByCustomer(@Validated @RequestBody SignupRequestDto signupRequest){
-		if(userRepository.existsByUsername(signupRequest.getUsername())) {
+		if(userService.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponseDto("Error: Username is already taklen!"));
 
 		}
 
-		if(userRepository.existsByEmail(signupRequest.getEmail())) {
+		if(userService.existsByEmail(signupRequest.getEmail())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponseDto("Error: Email is already in use!"));
@@ -188,7 +185,7 @@ public class AuthController {
 		Set<RoleEntity> roles = new HashSet<>();
 
 		if(strRole == null) {
-			RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+			RoleEntity customerRole = roleService.findByName(ERole.ROLE_CUSTOMER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(customerRole);
 		}else {
@@ -196,7 +193,7 @@ public class AuthController {
 				switch (role) {
 
 					default:
-						RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+						RoleEntity customerRole = roleService.findByName(ERole.ROLE_CUSTOMER)
 								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(customerRole);
 				}
@@ -204,7 +201,7 @@ public class AuthController {
 		}
 
 		user.setRoles(roles);
-		userRepository.save(user);
+		userService.save(user);
 
 		return ResponseEntity.ok(new MessageResponseDto("User registered successfully!"));
 	}

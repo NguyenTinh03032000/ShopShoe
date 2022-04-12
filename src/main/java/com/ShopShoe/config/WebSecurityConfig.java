@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
-import com.ShopShoe.service.Ipml.UserDetailsServiceImpl;
+import com.ShopShoe.service.Implements.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity

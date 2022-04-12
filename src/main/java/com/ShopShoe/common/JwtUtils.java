@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.ShopShoe.entity.TokenEntity;
 import com.ShopShoe.repository.TokenRepository;
-import com.ShopShoe.service.Ipml.UserDetailsImpl;
+import com.ShopShoe.service.Implements.UserDetailsImpl;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

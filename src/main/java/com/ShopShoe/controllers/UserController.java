@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Valid;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,7 @@ import com.ShopShoe.dto.MessageResponseDto;
 import com.ShopShoe.dto.SignupRequestDto;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.entity.UserEntity;
-import com.ShopShoe.repository.RoleRepository;
-import com.ShopShoe.repository.UserRepository;
+import com.ShopShoe.service.RoleService;
 import com.ShopShoe.service.UserService;
 
 
@@ -40,10 +40,7 @@ public class UserController {
 	UserService userService;
 	
 	@Autowired
-	UserRepository userRepository;
-	
-	@Autowired
-	RoleRepository roleRepository;
+	RoleService roleService;
 	
 	@Autowired
 	AuthController authController;
@@ -55,7 +52,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<UserEntity> getAllUser() {
 		try {
-			return (List<UserEntity>) userRepository.findAll();
+			return (List<UserEntity>) userService.findAll();
 		} catch (Exception e) {
 			logger.error("Error", e);
 		}
@@ -63,8 +60,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public Optional<UserEntity> getUserById(@PathVariable(value = "id") Long id) {
-		return userRepository.findById(id);
+		return userService.findById(id);
 	}
 	
 	@PostMapping()
@@ -77,7 +75,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteUser(@PathVariable long id) {
 		try {
-			UserEntity user = userService.findOne(id);
+			UserEntity user = userService.getById(id);
 			
 			userService.delete(user);
 			return "Delete user successful";			
@@ -92,7 +90,7 @@ public class UserController {
 		try {
 			UserEntity user = userService.findId(id);
 			if(!user.getUsername().equals(signupRequest.getUsername())) {
-				if(userRepository.existsByUsername(signupRequest.getUsername())) {
+				if(userService.existsByUsername(signupRequest.getUsername())) {
 					return ResponseEntity
 							.badRequest()
 							.body(new MessageResponseDto("Error: Username is already taklen!"));
@@ -100,7 +98,7 @@ public class UserController {
 				}
 			}
 			if(!user.getEmail().equals(signupRequest.getEmail())) {
-				if(userRepository.existsByEmail(signupRequest.getEmail()) ) {
+				if(userService.existsByEmail(signupRequest.getEmail()) ) {
 					return ResponseEntity
 							.badRequest()
 							.body(new MessageResponseDto("Error: Email is already in use!"));
@@ -118,26 +116,26 @@ public class UserController {
 			Set<RoleEntity> roles = new HashSet<>();
 			
 			if(strRole == null) {
-				RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+				RoleEntity customerRole = roleService.findByName(ERole.ROLE_CUSTOMER)
 						.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 				roles.add(customerRole);
 			}else {
 				strRole.forEach(role ->{
 					switch (role) {
 					case "admin":
-							RoleEntity adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+							RoleEntity adminRole = roleService.findByName(ERole.ROLE_ADMIN)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 							roles.add(adminRole);
 						break;
 					
 					case "salesman":
-						RoleEntity saleRole = roleRepository.findByName(ERole.ROLE_SALESMAN)
+						RoleEntity saleRole = roleService.findByName(ERole.ROLE_SALESMAN)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 							roles.add(saleRole);
 						break;
 						
 					default:
-						RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+						RoleEntity customerRole = roleService.findByName(ERole.ROLE_CUSTOMER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(customerRole);
 					}

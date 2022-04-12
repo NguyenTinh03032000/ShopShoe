@@ -44,13 +44,12 @@ public class DocumentController {
     }
     
     @PreAuthorize("hasRole('ADMIN') or hasRole('SALESMAN')")
-    @GetMapping(value = "/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/loadFile/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> getImage(@Validated @PathVariable(value = "imageName") String imageName) throws IOException {
         try {
         	File serverFile = new File("src/main/resources/upload/" + imageName);
 
         	return ResponseEntity.ok(Files.readAllBytes(serverFile.toPath()));
-        	
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(new MessageResponseDto("Error"));
 		}

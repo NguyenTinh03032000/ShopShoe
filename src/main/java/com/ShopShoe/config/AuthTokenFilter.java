@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ShopShoe.common.JwtUtils;
 import com.ShopShoe.repository.TokenRepository;
-import com.ShopShoe.service.Ipml.UserDetailsServiceImpl;
+import com.ShopShoe.service.Implements.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter{
 	

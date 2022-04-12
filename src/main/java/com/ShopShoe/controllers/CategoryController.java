@@ -1,7 +1,6 @@
 package com.ShopShoe.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.entity.CategoryEntity;
-import com.ShopShoe.repository.CategoryRepository;
+import com.ShopShoe.service.CategoryService;
 
 
 @RestController
@@ -21,22 +20,22 @@ import com.ShopShoe.repository.CategoryRepository;
 public class CategoryController {
 	
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private CategoryService categoryService;
 	
 	@GetMapping()
 	public List<CategoryEntity> getAllCategory() {
-		return (List<CategoryEntity>) categoryRepository.findAll();
+		return (List<CategoryEntity>) categoryService.findAll();
 	}
 	
 	@GetMapping("/{id}")
-	public Optional<CategoryEntity> getCategoryById(@PathVariable(value = "id") Long id) {
-		return categoryRepository.findById(id);
+	public CategoryEntity getCategoryById(@PathVariable(value = "id") Long id) {
+		return categoryService.findOne(id);
 	}
 	
 	@PostMapping()
 	public String createCategory(@RequestBody CategoryEntity category) {
 		try {
-			categoryRepository.save(category);
+			categoryService.save(category);
 			return "Add successful";
 		} catch (Exception e) {
 			return "Error";
@@ -46,9 +45,9 @@ public class CategoryController {
 	@DeleteMapping("/{id}")
 	public String deleteCategory(@PathVariable long id){
 		try {
-			CategoryEntity category = categoryRepository.getById(id);
+			CategoryEntity category = categoryService.findOne(id);
 			
-			categoryRepository.delete(category);
+			categoryService.delete(category);
 			return "Delete successful";			
 		} catch (Exception e) {
 			return "Error";

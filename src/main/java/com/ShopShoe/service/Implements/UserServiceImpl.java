@@ -1,5 +1,7 @@
-package com.ShopShoe.service.Ipml;
+package com.ShopShoe.service.Implements;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByNameContaining(name);
     }
     @Override
-    public UserEntity findOne(long id) {
+    public UserEntity getById(long id) {
         return userRepository.getById(id);
+    }
+    @Override
+    public Optional<UserEntity> findById(long id) {
+        return userRepository.findById(id);
     }
     @Override
     public void save(UserEntity u) {
@@ -37,5 +43,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findId(long id) {
     	return userRepository.findId(id);
+    }
+    @Override
+    public Boolean existsByUsername(String username) {
+    	return userRepository.existsByUsername(username);
+    }
+    @Override
+    public Boolean existsByEmail(String email) {
+    	return userRepository.existsByEmail(email);
     }
 }
