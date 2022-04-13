@@ -1,6 +1,6 @@
 package com.ShopShoe.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +38,7 @@ public class LogEntity {
 	@JoinColumn(name="id_product")
 	private ProductEntity product;
 	
-	private Date actionDate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+7")
+	private Date action_Date;
 
 }

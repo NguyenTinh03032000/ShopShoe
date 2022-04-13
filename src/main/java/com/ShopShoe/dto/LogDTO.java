@@ -1,9 +1,8 @@
 package com.ShopShoe.dto;
 
-import java.sql.Date;
+import java.util.*;
 
-import com.ShopShoe.entity.ProductEntity;
-import com.ShopShoe.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,15 +15,12 @@ import lombok.NoArgsConstructor;
 public class LogDTO {
 
 	private long id;
-	
-	private String name_action;
 	private String name_method;
 	private String content;
+	private long idUser;
+	private String nameUser;
 	
-	private UserEntity user;
-	
-	private ProductEntity product;
-	
-	private Date actionDate;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+7")
+	private Date  actionDate;
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ShopShoe.dto.CategoryDTO;
 import com.ShopShoe.entity.CategoryEntity;
 import com.ShopShoe.service.CategoryService;
 
@@ -23,13 +24,8 @@ public class CategoryController {
 	private CategoryService categoryService;
 	
 	@GetMapping()
-	public List<CategoryEntity> getAllCategory() {
-		return (List<CategoryEntity>) categoryService.findAll();
-	}
-	
-	@GetMapping("/{id}")
-	public CategoryEntity getCategoryById(@PathVariable(value = "id") Long id) {
-		return categoryService.findOne(id);
+	public List<CategoryDTO> getAllCategory() {
+		return (List<CategoryDTO>) categoryService.findAll();
 	}
 	
 	@PostMapping()
@@ -45,7 +41,7 @@ public class CategoryController {
 	@DeleteMapping("/{id}")
 	public String deleteCategory(@PathVariable long id){
 		try {
-			CategoryEntity category = categoryService.findOne(id);
+			CategoryEntity category = categoryService.getById(id);
 			
 			categoryService.delete(category);
 			return "Delete successful";			
