@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ShopShoe.dto.RoleDTO;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.service.RoleService;
 
@@ -22,8 +23,8 @@ public class RoleController {
 	private RoleService roleService;
 	
 	@GetMapping()
-	public List<RoleEntity> getAllRole() {
-		return (List<RoleEntity>) roleService.findAll();
+	public List<RoleDTO> getAllRole() {
+		return (List<RoleDTO>) roleService.findAll();
 	}
 	
 	@GetMapping("/{id}")

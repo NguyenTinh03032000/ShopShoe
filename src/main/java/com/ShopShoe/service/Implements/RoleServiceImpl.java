@@ -1,11 +1,14 @@
 package com.ShopShoe.service.Implements;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ShopShoe.Mapper.RoleMapper;
 import com.ShopShoe.common.ERole;
+import com.ShopShoe.dto.RoleDTO;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.repository.RoleRepository;
 import com.ShopShoe.service.RoleService;
@@ -17,9 +20,13 @@ public class RoleServiceImpl implements RoleService {
 	@Autowired
     private RoleRepository roleRepository;
 	
+	@Autowired
+	private RoleMapper roleMapper;
+	
     @Override
-    public List<RoleEntity> findAll() {
-        return roleRepository.findAll();
+    public List<RoleDTO> findAll() {
+        return roleRepository.findAll().stream().
+        		map(roleMapper :: roleEntityToRoleDTO).collect(Collectors.toList());
     }
     @Override
     public RoleEntity getById(Integer id) {

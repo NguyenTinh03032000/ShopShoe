@@ -22,4 +22,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
 	
 	@Query(value = "select * from users where users.id = ?1 ", nativeQuery = true)
 	UserEntity findId(long id);
+	
+	List<UserEntity> findAllByOrderByUsernameAsc();
+	
 }

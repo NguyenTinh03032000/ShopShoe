@@ -3,11 +3,12 @@ package com.ShopShoe.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.ShopShoe.dto.UserDTO;
 import com.ShopShoe.entity.UserEntity;
 
 
 public interface UserService {
-	Iterable<UserEntity> findAll();
+	List<UserDTO> findAll();
     List<UserEntity> search(String u);
     UserEntity getById(long id);
     void save(UserEntity u);

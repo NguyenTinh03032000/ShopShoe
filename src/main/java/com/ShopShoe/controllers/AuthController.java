@@ -57,6 +57,11 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 	
+	/**
+	 * 
+	 * @param loginRequest
+	 * @return information account and token login
+	 */
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequestDto loginRequest){
 		
@@ -96,6 +101,11 @@ public class AuthController {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param signupRequest
+	 * @return 
+	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/signupAdmin")
 	public ResponseEntity<?> registerUser(@Validated @RequestBody SignupRequestDto signupRequest){
@@ -155,7 +165,11 @@ public class AuthController {
 		
 		return ResponseEntity.ok(new MessageResponseDto("User registered successfully!"));
 	}
-	
+	/**
+	 * 
+	 * @param signupRequest
+	 * @return
+	 */
 	@PostMapping("/signupCustomer")
 	public ResponseEntity<?> registerUserByCustomer(@Validated @RequestBody SignupRequestDto signupRequest){
 		if(userService.existsByUsername(signupRequest.getUsername())) {

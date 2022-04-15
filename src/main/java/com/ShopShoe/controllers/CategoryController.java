@@ -3,6 +3,7 @@ package com.ShopShoe.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class CategoryController {
 	}
 	
 	@PostMapping()
-	public String createCategory(@RequestBody CategoryEntity category) {
+	public String createCategory(@Validated @RequestBody CategoryEntity category) {
 		try {
 			categoryService.save(category);
 			return "Add successful";

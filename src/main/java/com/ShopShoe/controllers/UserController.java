@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ShopShoe.common.ERole;
 import com.ShopShoe.dto.MessageResponseDto;
 import com.ShopShoe.dto.SignupRequestDto;
+import com.ShopShoe.dto.UserDTO;
 import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.entity.UserEntity;
 import com.ShopShoe.service.RoleService;
@@ -50,9 +51,9 @@ public class UserController {
 	
 	@GetMapping()
 	@PreAuthorize("hasRole('ADMIN')")
-	public List<UserEntity> getAllUser() {
+	public List<UserDTO> getAllUser() {
 		try {
-			return (List<UserEntity>) userService.findAll();
+			return (List<UserDTO>) userService.findAll();
 		} catch (Exception e) {
 			logger.error("Error", e);
 		}

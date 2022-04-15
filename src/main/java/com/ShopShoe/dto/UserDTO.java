@@ -1,16 +1,14 @@
 package com.ShopShoe.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.ShopShoe.entity.RoleEntity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@RequiredArgsConstructor
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 
 public class UserDTO {
@@ -30,8 +28,9 @@ public class UserDTO {
 	private String password;
 	
 	private long scores;
-
-	private Set<RoleEntity> roles = new HashSet<>();
+	
+//	@JsonProperty("roles")
+//	private Set<RoleDTO> roles = new HashSet<>();
 
 	public UserDTO(String name,String address,String phone_number,String username, String email, String password,long scores) {
 		this.name = name;

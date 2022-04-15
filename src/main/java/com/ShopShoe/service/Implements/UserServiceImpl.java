@@ -1,10 +1,13 @@
 package com.ShopShoe.service.Implements;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ShopShoe.Mapper.UserMapper;
+import com.ShopShoe.dto.UserDTO;
 import com.ShopShoe.entity.UserEntity;
 import com.ShopShoe.repository.UserRepository;
 import com.ShopShoe.service.UserService;
@@ -16,9 +19,13 @@ public class UserServiceImpl implements UserService {
 	@Autowired
     private UserRepository userRepository;
 	
+	@Autowired
+    private UserMapper userMapper;
+	
     @Override
-    public List<UserEntity> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+        return userRepository.findAllByOrderByUsernameAsc().stream().
+        		map(userMapper :: userEntityToUserDTO).collect(Collectors.toList());
     }
     @Override
     public List<UserEntity> search(String name) {
