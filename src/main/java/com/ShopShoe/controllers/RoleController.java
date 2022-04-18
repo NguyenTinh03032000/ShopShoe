@@ -1,7 +1,6 @@
 package com.ShopShoe.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.dto.RoleDTO;
-import com.ShopShoe.entity.RoleEntity;
 import com.ShopShoe.service.RoleService;
 
 @RestController
@@ -28,7 +26,7 @@ public class RoleController {
 	}
 	
 	@GetMapping("/{id}")
-	public Optional<RoleEntity> getRoleById(@PathVariable(value = "id") Integer id) {
-		return roleService.findById(id);
+	public RoleDTO getRoleById(@PathVariable(value = "id") Integer id) {
+		return roleService.getById(id);
 	}
 }

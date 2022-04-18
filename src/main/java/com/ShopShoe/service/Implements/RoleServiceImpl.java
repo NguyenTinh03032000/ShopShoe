@@ -29,8 +29,8 @@ public class RoleServiceImpl implements RoleService {
         		map(roleMapper :: roleEntityToRoleDTO).collect(Collectors.toList());
     }
     @Override
-    public RoleEntity getById(Integer id) {
-        return roleRepository.getById(id);
+    public RoleDTO getById(Integer id) {
+        return roleMapper.roleEntityToRoleDTO(roleRepository.findId(id));
     }
     @Override
     public Optional<RoleEntity> findById(Integer id) {

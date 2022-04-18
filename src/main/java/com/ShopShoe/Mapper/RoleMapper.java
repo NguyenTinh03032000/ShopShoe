@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import com.ShopShoe.dto.RoleDTO;
 import com.ShopShoe.entity.RoleEntity;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface RoleMapper {
 	RoleDTO roleEntityToRoleDTO(RoleEntity roleEntity);
 	

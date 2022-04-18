@@ -51,6 +51,9 @@ public class ProductController {
 		return productService.findById(id);
 	}
 	
+	/**
+	 * get User Current
+	 */
 	public UserEntity getUserCurrent() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsImpl u = (UserDetailsImpl) authentication.getPrincipal();
@@ -66,9 +69,9 @@ public class ProductController {
 			}else {
 				productService.save(product);
 				LogEntity logEntity = new LogEntity();
-				logEntity.setName_action("Thêm sản phẩm mới");
+				logEntity.setName_action("Add new product");
 				logEntity.setName_method("POST");
-				logEntity.setContent("Thêm sản phẩm: "+product.getName());
+				logEntity.setContent("Add product: "+product.getName());
 				logEntity.setUser(getUserCurrent());
 				logEntity.setProduct(product);
 				Date createDate = new Date((new Date()).getTime());

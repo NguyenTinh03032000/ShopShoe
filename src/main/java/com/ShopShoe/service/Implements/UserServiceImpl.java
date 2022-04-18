@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 	
     @Override
     public List<UserDTO> findAll() {
-        return userRepository.findAllByOrderByUsernameAsc().stream().
+        return  (List<UserDTO>) userRepository.findAllByOrderByUsernameAsc().stream().
         		map(userMapper :: userEntityToUserDTO).collect(Collectors.toList());
     }
     @Override

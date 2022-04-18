@@ -10,7 +10,7 @@ import com.ShopShoe.entity.RoleEntity;
 
 public interface RoleService {
 	Iterable<RoleDTO> findAll();
-    RoleEntity getById(Integer id);
+    RoleDTO getById(Integer id);
     void save(RoleEntity role);
     void delete(RoleEntity role);
 	Optional<RoleEntity> findByName(ERole name);

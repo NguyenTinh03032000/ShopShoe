@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import com.ShopShoe.dto.UserDTO;
 import com.ShopShoe.entity.UserEntity;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 	UserDTO userEntityToUserDTO(UserEntity userEntity);
 }

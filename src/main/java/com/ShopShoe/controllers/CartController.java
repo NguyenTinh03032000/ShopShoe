@@ -37,6 +37,10 @@ public class CartController {
 	@Autowired
 	private CartIndexService cartIndexService;
 	
+	/**
+	 * @Param : None
+	 * @return list cart index in cart
+	 */
 	@GetMapping()
 	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
 	public List<CartIndexEntity> getAllProductInCart() {
@@ -52,6 +56,12 @@ public class CartController {
 		return null;
 	}
 	
+	/**
+	 * @Content add product to cart
+	 * @param id product
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/addProduct")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
 	public String addToCart(@RequestParam("idProduct") String id,HttpServletRequest request) {
@@ -88,6 +98,12 @@ public class CartController {
 		}
 	}
 	
+	/**
+	 * @Content change number product in cart
+	 * @param id product
+	 * @param value
+	 * @return
+	 */
 	@PostMapping("/changProductQuanity")
 	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
 	public String changQuanity(@RequestParam String id, @RequestParam String value) {

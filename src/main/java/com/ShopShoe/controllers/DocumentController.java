@@ -29,6 +29,13 @@ public class DocumentController {
 	@Autowired
     private DocumentService documneService;
     
+	/**
+	 * @note api upload file to server
+	 * @param file
+	 * @param UserId
+	 * @param docType
+	 * @return
+	 */
     @PostMapping("/uploadFile")
     @PreAuthorize("hasRole('ADMIN')")
     public UploadFileResponseDto uploadFile(@RequestParam("file") MultipartFile file, 
@@ -43,6 +50,13 @@ public class DocumentController {
                 file.getContentType(), file.getSize());
     }
     
+    /**
+     * 
+     * @param imageName
+     * @return 
+     * @throws IOException
+     * @note support load image browser
+     */
     @PreAuthorize("hasRole('ADMIN') or hasRole('SALESMAN')")
     @GetMapping(value = "/loadFile/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> getImage(@Validated @PathVariable(value = "imageName") String imageName) throws IOException {

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,7 +60,7 @@ public class AuthController {
 	JwtUtils jwtUtils;
 	
 	/**
-	 * 
+	 * @Content login
 	 * @param loginRequest
 	 * @return information account and token login
 	 */
@@ -102,7 +104,7 @@ public class AuthController {
 	}
 	
 	/**
-	 * 
+	 * @Content signup for admin
 	 * @param signupRequest
 	 * @return 
 	 */
@@ -171,7 +173,7 @@ public class AuthController {
 	 * @return
 	 */
 	@PostMapping("/signupCustomer")
-	public ResponseEntity<?> registerUserByCustomer(@Validated @RequestBody SignupRequestDto signupRequest){
+	public ResponseEntity<?> registerUserByCustomer(@Valid @RequestBody SignupRequestDto signupRequest){
 		if(userService.existsByUsername(signupRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
