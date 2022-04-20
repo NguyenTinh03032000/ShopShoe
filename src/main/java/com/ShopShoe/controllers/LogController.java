@@ -25,10 +25,14 @@ public class LogController {
 	private LogService logService;
 	
 	@GetMapping()
-	public List<LogEntity> getAllLogProduct() {
-		return (List<LogEntity>) logService.findAll();
+	public List<LogDTO> getAllLogProduct() {
+		return (List<LogDTO>) logService.findAll();
 	}
-	
+	/**
+	 * 
+	 * @param idProduct
+	 * @return Log product
+	 */
 	@GetMapping("/{idProduct}")
 	public List<LogDTO> getLogProductByUser(@PathVariable long idProduct){
 		try {
@@ -37,15 +41,15 @@ public class LogController {
 			for(int i=0; i< listLogEntity.size() ; i++) {
 				
 				LogDTO logdto = new LogDTO();
-				logdto.setId(idProduct);
+				logdto.setId(listLogEntity.get(i).getId());
 				logdto.setName_method(listLogEntity.get(i).getName_method());
 				logdto.setContent(listLogEntity.get(i).getContent());
+				logdto.setIdProduct(listLogEntity.get(i).getProduct().getId());
 				logdto.setIdUser(listLogEntity.get(i).getUser().getId());
 				logdto.setNameUser(listLogEntity.get(i).getUser().getName());
-				logdto.setActionDate(listLogEntity.get(i).getAction_Date());
+				logdto.setAction_Date(listLogEntity.get(i).getAction_Date());
 				listLogDto.add(logdto);
-			}
-			
+			}			
 			return listLogDto;			
 		} catch (Exception e) {
 			return null;

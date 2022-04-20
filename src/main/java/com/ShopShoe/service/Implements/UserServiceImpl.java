@@ -33,7 +33,11 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserEntity getById(long id) {
-        return userRepository.getById(id);
+        return userRepository.findId(id);
+    }
+    @Override
+    public UserDTO getUserDTOById(long id) {
+        return userMapper.userEntityToUserDTO(userRepository.findId(id)) ;
     }
     @Override
     public Optional<UserEntity> findById(long id) {
@@ -58,5 +62,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean existsByEmail(String email) {
     	return userRepository.existsByEmail(email);
+    }
+    @Override
+    public List<UserDTO> searchKeyValue(String key,String value) {
+    	if(key.equals("name")) {
+    		return userMapper.listUserEntityToUserDTO(userRepository.findByNameContaining(value));
+    	}else if(key.equals("address")){
+    		return userMapper.listUserEntityToUserDTO(userRepository.findByAddressContaining(value));
+		}else if(key.equals("email")){
+    		return userMapper.listUserEntityToUserDTO(userRepository.findByEmailContaining(value));
+		}else if(key.equals("phone")){
+    		return userMapper.listUserEntityToUserDTO(userRepository.findByPhoneContaining(value));
+		}
+    	return null;
     }
 }

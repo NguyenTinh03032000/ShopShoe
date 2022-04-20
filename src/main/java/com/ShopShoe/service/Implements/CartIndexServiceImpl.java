@@ -1,9 +1,12 @@
 package com.ShopShoe.service.Implements;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ShopShoe.Mapper.CartIndexMapper;
+import com.ShopShoe.dto.CartIndexDTO;
 import com.ShopShoe.entity.CartEntity;
 import com.ShopShoe.entity.CartIndexEntity;
 import com.ShopShoe.entity.ProductEntity;
@@ -16,6 +19,9 @@ public class CartIndexServiceImpl implements CartIndexService {
 	
 	@Autowired
     private CartIndexRepository cartIndexRepository;
+	
+	@Autowired
+    private CartIndexMapper cartIndexMapper;
 	
     @Override
     public List<CartIndexEntity> findAll() {
@@ -38,7 +44,8 @@ public class CartIndexServiceImpl implements CartIndexService {
     	return cartIndexRepository.findByProductAndCart(product,cart);
     }
     @Override
-    public List<CartIndexEntity> findByCart(CartEntity cart) {
-    	return cartIndexRepository.findByCart(cart);
+    public List<CartIndexDTO> findByCart(CartEntity cart) {
+    	return cartIndexRepository.findByCart(cart).stream().
+    			map(cartIndexMapper :: cartIndexEntityToCartIndexDto).collect(Collectors.toList());
     }
 }

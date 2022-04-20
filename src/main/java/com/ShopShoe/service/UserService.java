@@ -9,7 +9,9 @@ import com.ShopShoe.entity.UserEntity;
 
 public interface UserService {
 	List<UserDTO> findAll();
+	List<UserDTO> searchKeyValue(String key,String value);
     List<UserEntity> search(String u);
+    UserDTO getUserDTOById(long id);
     UserEntity getById(long id);
     void save(UserEntity u);
     void delete(UserEntity u);

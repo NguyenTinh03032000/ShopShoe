@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ShopShoe.dto.CartIndexDTO;
 import com.ShopShoe.entity.CartEntity;
 import com.ShopShoe.entity.CartIndexEntity;
 import com.ShopShoe.entity.ProductEntity;
@@ -41,16 +42,17 @@ public class CartController {
 	 * @Param : None
 	 * @return list cart index in cart
 	 */
+	
 	@GetMapping()
 	@PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
-	public List<CartIndexEntity> getAllProductInCart() {
+	public List<CartIndexDTO> getAllProductInCart() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsImpl u = (UserDetailsImpl) authentication.getPrincipal();
 		UserEntity currentUser = userService.getById(u.getId());
 		
 		CartEntity cart = cartService.findByUser(currentUser);
 		if(cart != null) {
-			List<CartIndexEntity> listIndex = cartIndexService.findByCart(cart);
+			List<CartIndexDTO> listIndex = cartIndexService.findByCart(cart);
 			return listIndex;
 		}
 		return null;

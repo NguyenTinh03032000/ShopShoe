@@ -2,7 +2,6 @@ package com.ShopShoe.controllers;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ShopShoe.common.ERole;
@@ -62,8 +62,8 @@ public class UserController {
 	
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public Optional<UserEntity> getUserById(@PathVariable(value = "id") Long id) {
-		return userService.findById(id);
+	public UserDTO getUserById(@PathVariable(value = "id") Long id) {
+		return userService.getUserDTOById(id);
 	}
 	
 	@PostMapping()
@@ -150,5 +150,10 @@ public class UserController {
 		}catch (Exception e) {
 			return ResponseEntity.ok(new MessageResponseDto("User update fail!"));
 		}
+	}
+	
+	@GetMapping("/search")
+	public List<UserDTO> search(@RequestParam("key") String key,@RequestParam("value") String value){
+		return userService.searchKeyValue(key, value);
 	}
 }

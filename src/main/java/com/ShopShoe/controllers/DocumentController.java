@@ -57,7 +57,6 @@ public class DocumentController {
      * @throws IOException
      * @note support load image browser
      */
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SALESMAN')")
     @GetMapping(value = "/loadFile/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> getImage(@Validated @PathVariable(value = "imageName") String imageName) throws IOException {
         try {

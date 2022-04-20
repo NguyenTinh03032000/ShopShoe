@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ShopShoe.dto.MessageResponseDto;
+import com.ShopShoe.dto.ProductDTO;
 import com.ShopShoe.entity.LogEntity;
 import com.ShopShoe.entity.ProductEntity;
 import com.ShopShoe.entity.UserEntity;
@@ -42,8 +45,8 @@ public class ProductController {
 	private UserService userService;
 	
 	@GetMapping()
-	public List<ProductEntity> getProduct() {
-		return (List<ProductEntity>) productService.findAll();
+	public List<ProductDTO> getProduct() {
+		return (List<ProductDTO>) productService.findAll();
 	}
 
 	@GetMapping("/{id}")
@@ -96,22 +99,53 @@ public class ProductController {
 		}
 	}
 
+	/**
+	 * @Content update product
+	 * @param id
+	 * @param productDetails
+	 * @return product
+	 */
 	@PutMapping(value ="/{id}")
-	public ProductEntity updateProduct(@PathVariable(value = "id") Long id,@Valid @RequestBody ProductEntity productDetails) {
+	public ResponseEntity<?> updateProduct(@PathVariable(value = "id") Long id,@Valid @RequestBody ProductEntity productDetails) {
 		try {
-			return productService.findById(id)
-					.map(product ->{
-						product.setName(productDetails.getName());
-						product.setPrice(productDetails.getPrice());
-						product.setDescription(productDetails.getDescription());
-						product.setBrand(productDetails.getBrand());
-						product.setCategory(productDetails.getCategory());
-						return productService.save(product);
-					})
-					.orElseGet(()->{
-						productDetails.setId(id);
-						return productService.save(productDetails);
-					});
+			ProductEntity product = productService.getById(id);
+			if(product != null) {
+				product.setName(productDetails.getName());
+				product.setPrice(productDetails.getPrice());
+				product.setDescription(productDetails.getDescription());
+				product.setBrand(productDetails.getBrand());
+				product.setCategory(productDetails.getCategory());
+				
+				LogEntity logEntity = new LogEntity();
+				logEntity.setName_action("Update product product");
+				logEntity.setName_method("PUT");
+				logEntity.setContent("Update product: "+product.getName());
+				logEntity.setUser(getUserCurrent());
+				logEntity.setProduct(product);
+				Date Date = new Date((new Date()).getTime());
+				logEntity.setAction_Date(Date);
+				logService.save(logEntity);
+				
+				return ResponseEntity.ok(productService.save(product));
+			}else {
+				return ResponseEntity.ok(new MessageResponseDto("Update object not found"));
+			}
+			
+			
+			
+//			return productService.findById(id)
+//					.map(product ->{
+//						product.setName(productDetails.getName());
+//						product.setPrice(productDetails.getPrice());
+//						product.setDescription(productDetails.getDescription());
+//						product.setBrand(productDetails.getBrand());
+//						product.setCategory(productDetails.getCategory());
+//						return productService.save(product);
+//					})
+//					.orElseGet(()->{
+//						productDetails.setId(id);
+//						return productService.save(productDetails);
+//					});
 		} catch (Exception e) {
 		}
 		return null;

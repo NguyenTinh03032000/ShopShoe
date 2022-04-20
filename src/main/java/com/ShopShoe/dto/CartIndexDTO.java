@@ -2,6 +2,7 @@ package com.ShopShoe.dto;
 
 import com.ShopShoe.entity.CartEntity;
 import com.ShopShoe.entity.ProductEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class CartIndexDTO {
 	
 	private int amount;
 	
+	@JsonIgnore
 	private CartEntity cart;
 	
 	private ProductEntity product;
