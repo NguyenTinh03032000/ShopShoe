@@ -11,7 +11,7 @@ import com.ShopShoe.entity.RoleEntity;
 public interface RoleService {
 	Iterable<RoleDTO> findAll();
     RoleDTO getById(Integer id);
-    void save(RoleEntity role);
+    RoleEntity save(RoleEntity role);
     void delete(RoleEntity role);
 	Optional<RoleEntity> findByName(ERole name);
 	Optional<RoleEntity> findById(Integer id);

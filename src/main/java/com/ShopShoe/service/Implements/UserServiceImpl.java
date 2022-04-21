@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
     @Override
-    public void save(UserEntity u) {
-    	userRepository.save(u);
+    public UserEntity save(UserEntity u) {
+    	return userRepository.save(u);
     }
     @Override
     public void delete(UserEntity u) {
